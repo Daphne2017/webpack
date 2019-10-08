@@ -1,0 +1,15 @@
+body{
+    /* background: red; */
+    /* background-image: url('./timg.jpg') */
+}
+#div1{
+    background-image: url('../imgs/timg.jpg');
+    width: 500px;
+    height: 500px;
+
+}
+#div2{
+    width: 500px;
+    height: 500px;
+
+}
