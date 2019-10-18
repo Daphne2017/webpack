@@ -1,0 +1,196 @@
+第一节
+  1》webpack是什么
+    本质上，webpack 是一个现代 JavaScript 应用程序的静态模块打包器(module bundler)
+  2》webpack能干什么
+    模块化打包:
+    css变成一行
+    html变成一行
+    js变成一行
+    去除注释
+    去除多余引号
+第二节
+  1》全局安装
+    npm install webpack -g
+    npm install webpack-cli -g （webpack4的脚手架）
+  2》生成package.json
+    npm init 初始化一个项目
+  3》局部安装 生成node-modules
+    npm install webpack -S （--save）
+    npm install webpack-cli -S
+
+  4》打包 : webpack
+    默认entry ：src/index.js 默认入口
+    默认output ：dist/main.js 执行webpack命令后默认生成dist/main.js
+    (那么如何配置入口和出口呢？)
+
+    压缩： webpack --mode production (默认打包生产环境的变成一行)
+    未压缩：webpack --mode development
+第三节
+  1》wbepack本身是打包js的，但是如果想要打包css，html，图片...怎么办？必须要进行相关配置
+
+  2》配置
+    1>webpack四个核心概念
+      入口(entry)
+      输出(output)
+      loader: webpack只支持js,不支持css，图片...,如果让webpack支持使用loader
+      插件(plugins)：有效的打包或者压缩css，js，html，图片
+
+    2>配置文件
+    命名：webpack.config.js
+第四节
+  一、本地服务器(dev-server)
+  安装：
+  npm install webpack-dev-server -S
+  配置：
+  webpack.config.js:
+  devServer:{
+    contentBase:"",
+    inline
+    port
+    hot
+  }
+  配置本地服务器后怎么运行？webpack-dev-server
+  也可以在package.json 配置运行命令
+  "scripts":{
+    "dev":"webpack-dev-server --open --inline" 自动刷新，实时打开
+  }
+
+第五节
+一、loader ： 加载程序
+二、loader的配置
+
+  1》引入css需要
+  style-loader
+  css-loader
+
+下载：
+  npm install style-loader css-loader -S
+  file-loader css文件引入图片需要file-loader
+  npm install file-loader -S
+loader列表：
+https://blog.csdn.net/keliyxyz/article/details/51649429
+
+第六节
+  一、插件
+
+    html-webpack-plugin
+
+    src :开发阶段（写代码）
+
+      index.html
+      index.js
+      style.css
+      1.jpg
+      ...
+
+    public ：生产阶段（项目要上线）
+
+  2》使用 webpack.config.js
+
+  1》安装（下载）
+
+    npm install html-webpack-plugin -S
+
+  2》配置(webpack.config.js)
+
+    1>const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+
+    2>plugins:[
+      new HtmlWebpackPlugin({
+        template:"./src/index.html",
+        minify:{
+        removeAttributeQuotes:true,//去除引号
+        removeComments:true,//去除注释
+        removeEmptyAttributes:true,//去除空属性
+        collapseWhitespace:true//去除空格
+        }
+      })
+    ]
+
+  第七节
+  一、html-withimg-loader
+  
+    让html内可以支持图片
+  
+  1》安装(下载)
+  
+    npm install html-withimg-loader -S
+  
+  2》配置webpack.config.js
+    {
+    test:/\.html$/,
+    use: 'html-withimg-loader'
+    }
+第九节
+一、css提取?
+
+  插件：
+1》下载(安装)
+  npm install extract-text-webpack-plugin@next -S
+
+2》配置
+  const ExtractTextPlugin = require("extract-text-webpack-plugin");
+第十节
+一、babel
+
+  核心：
+  babel-core
+
+功能：
+  babel-loader
+  babel-preset-env
+  babel-preset-react
+
+二、安装（下载）
+
+  npm install babel-core babel-loader babel-preset-env babel-preset-react -S
+
+三、配置
+
+  v1:
+    webpack.config.js
+
+  {
+    test:/(\.jsx|\.js)$/,
+    use:{
+      loader:"babel-loader",
+      options:{
+      presets:["env",'react']
+    }
+    },
+    exclude:/node_modules/
+  }
+
+  v2:
+    新增.babelrc文件
+  {
+  "presets":['env','react']
+  }
+第十一节
+  引入第三方插件
+    npm install jquery
+    import $ from 'jquery'
+
+  如何把vue项目上传到git仓库？
+  可以先把仓库拿下来git clone XXX
+  然后 vue init webpack XXX
+  如何配置多个入口？
+  多个出口？
+
+
+  需求1
+   a.js b.js c.js 
+   aaa.js
+
+entry：['/aap/a' 'app/b' 'app/c']
+
+
+   
+  需求2
+  a.js     b.js c.js
+  a.js     bbb.js
+
+  需求3
+  a.js b.js c.js
+  随机.js

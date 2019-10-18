@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/js/index.js',  
     output: {
         path: path.resolve(__dirname, 'public'),  // 打包输出的目录名称是什么
-        filename: 'js/bundle-[hash].js'  // 配置哈希随机文件名,打包到js目录下
+        filename: 'js/bundle-[hash].js'  // 配置哈希随机文件名,打包到js目录下,如果文件没有修改，则随机的哈希名字没有改变
     },
   // 代理配置地址：https://segmentfault.com/a/1190000016199721
   // 代理配置地址：https://www.cnblogs.com/beka/p/8479710.html
@@ -64,7 +64,7 @@ module.exports = {
         ]
     },
     plugins:[
-        new ExtractTextPlugin('./css/[name].css'),
+      new ExtractTextPlugin('./css/[name].css'),
 	    new HtmlWebpackPlugin({
           template:"./src/index.html",
         //   filename:'a.html',
