@@ -1,4 +1,3 @@
-https://segmentfault.com/a/1190000006178770#articleHeader3 入门 Webpack，看这篇就够了
 第一节
   1》webpack是什么
     本质上，webpack 是一个现代 JavaScript 应用程序的静态模块打包器(module bundler)
@@ -9,6 +8,7 @@ https://segmentfault.com/a/1190000006178770#articleHeader3 入门 Webpack，看�
     js变成一行
     去除注释
     去除多余引号
+    可以编译其他自定义的"后缀名"
 第二节
   1》全局安装
     npm install webpack -g
@@ -23,6 +23,7 @@ https://segmentfault.com/a/1190000006178770#articleHeader3 入门 Webpack，看�
     默认entry ：src/index.js 默认入口
     默认output ：dist/main.js 执行webpack命令后默认生成dist/main.js
     (那么如何配置入口和出口呢？)
+    可以自己定义出口和入口
 
     压缩： webpack --mode production (默认打包生产环境的变成一行)
     未压缩：webpack --mode development
@@ -39,7 +40,8 @@ https://segmentfault.com/a/1190000006178770#articleHeader3 入门 Webpack，看�
     2>配置文件
     命名：webpack.config.js
 第四节
-  一、本地服务器(dev-server)
+https://segmentfault.com/a/1190000006178770#articleHeader3 入门 Webpack，看这篇就够了
+  一、本地服务器(dev-server)(热插拔)
   安装：
   npm install webpack-dev-server -S
   配置：
@@ -55,14 +57,41 @@ https://segmentfault.com/a/1190000006178770#articleHeader3 入门 Webpack，看�
   "scripts":{
     "dev":"webpack-dev-server --open --inline" 自动刷新，实时打开
   }
+  devServer:{
+      
+    contentBase:'./public', //本地服务器所加载的页面所在的目录
+    proxy: {
+      '/api': {
+        target: ' https://segmentfault.com',
+        // https://segmentfault.com/a/1190000018704305
+        pathRewrite: { '^/api': '' },
+        changeOrigin: true,     // target是域名的话，需要这个参数，
+        secure: true,          // 设置支持https协议的代理
+      }
+    },
+    port:8080,
+    hot:true, // 实时刷新
+    inline:true,
+},
+
+
+
 
 第五节
-一、loader ： 加载程序
+一、loader ： 加载器，加载东西
 二、loader的配置
 
   1》引入css需要
   style-loader
   css-loader
+
+
+  打包之前
+  test:".css"
+  use:['style-loader','css-loader']
+
+
+
 
 下载：
   npm install style-loader css-loader -S
@@ -73,6 +102,8 @@ https://blog.csdn.net/keliyxyz/article/details/51649429
 
 第六节
   一、插件
+html怎么打包？webpack只打包js文件，如何打包打包html，css？ 需要用到插件
+https://github.com/jantimon/html-webpack-plugin#configuration
 
     html-webpack-plugin
 
@@ -84,13 +115,22 @@ https://blog.csdn.net/keliyxyz/article/details/51649429
       1.jpg
       ...
 
-    public ：生产阶段（项目要上线）
+    public ：生产阶段也要有（项目要上线）
+      index.html
+      index.js
+      style.css
+      1.jpg
+      ...
 
   2》使用 webpack.config.js
 
   1》安装（下载）
 
     npm install html-webpack-plugin -S
+
+
+    该插件将为你生成一个 HTML5 文件， 其中包括使用 script 标签的 body 中的所有 webpack 包。
+    只需添加插件到你的 webpack 配置如下：
 
   2》配置(webpack.config.js)
 
@@ -99,8 +139,9 @@ https://blog.csdn.net/keliyxyz/article/details/51649429
 
     2>plugins:[
       new HtmlWebpackPlugin({
-        template:"./src/index.html",
-        minify:{
+        template:"./src/index.html", // 把谁生成了，包含什么模板的内容
+        filename："a.html // 生成的文件名，不写默认生成输出口目录下的index.html,
+        minify:{ // 设置打包后的html是否压缩
         removeAttributeQuotes:true,//去除引号
         removeComments:true,//去除注释
         removeEmptyAttributes:true,//去除空属性
@@ -178,20 +219,33 @@ https://blog.csdn.net/keliyxyz/article/details/51649429
   然后 vue init webpack XXX
   如何配置多个入口？
   多个出口？
+a.js b.js c.js ==>  aaa.js
+module.exports = {
+  entry: ["./aap/a","./aap/b"，"./aap/c" ],
+  output: {
+    path.resolve(__dirname, "dist")
+    filename:"aaa.js"
+  }
+}
 
+a.js ==>a.js     b.js c.js ===>bbb.js
+module.exports = {
+  entry: {
+    a: "./app/entry-a",
+    bbb: ["./app/b", "./app/c"]
+  },
+  output: {
+    path.resolve(__dirname, "dist")
+    filename:"[name]-[hash].js"
+    // [name] [hash] 用[name]去对应不同的出口文件名
+  }
+}
+entry: "./app/entry", // string | object | array
+entry: ["./app/entry1", "./app/entry2"],
+entry: {
+  a: "./app/entry-a",
+  b: ["./app/entry-b1", "./app/entry-b2"]
+},
 
-  需求1
-   a.js b.js c.js 
-   aaa.js
-
-entry：['/aap/a' 'app/b' 'app/c']
-
-
-   
-  需求2
-  a.js     b.js c.js
-  a.js     bbb.js
-
-  需求3
-  a.js b.js c.js
-  随机.js
+  丢失或者缺少某些模块时，直接把node_modules删掉，再重新npm install就可以了。
+  get not？
