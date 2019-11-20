@@ -187,7 +187,25 @@ https://github.com/jantimon/html-webpack-plugin#configuration
 二、安装（下载）
 
   npm install babel-core babel-loader babel-preset-env babel-preset-react -S
-
+ 注意：
+ webpack安装bable时有版本搭配  
+1、更新到最高版本:
+npm install @babel/core babel-loader @babel/preset-env @babel/preset-react -S
+package.json的版本：
+  "@babel/core": "^7.6.2",
+  "@babel/preset-env": "^7.6.2",
+  "@babel/preset-react": "^7.0.0",
+  "babel-loader": "^8.0.6"
+.babelrc文件中配置：
+  presets: ["@babel/preset-env","@babel/react",]
+2、回退低版本
+npm install babel-loader@7 babel-core babel-preset-env babel-preset-react -S
+  "babel-core": "^6.26.3",
+  "babel-loader": "^7.1.5",
+  "babel-preset-env": "^1.7.0",
+  "babel-preset-react": "^6.24.1",
+  .babelrc文件中配置：
+    presets:["env",'react']
 三、配置
 
   v1:
